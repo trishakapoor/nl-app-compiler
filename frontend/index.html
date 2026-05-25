@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trisha's Workspace — AI App Compiler</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <span class="logo-icon">⚡</span>
+          <div class="logo-text">
+            <h4>Trisha's Workspace</h4>
+            <span class="badge">Free Plan</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-section">
+          <span class="section-title">Navigation</span>
+          <a href="#" class="menu-item active"><i class="fa-solid fa-house"></i> Home</a>
+          <a href="#" class="menu-item"><i class="fa-solid fa-border-all"></i> All Apps</a>
+          <a href="#" class="menu-item"><i class="fa-solid fa-layer-group"></i> Templates</a>
+          <a href="#" class="menu-item"><i class="fa-solid fa-plug"></i> Integrations</a>
+        </div>
+
+        <div class="menu-section">
+          <span class="section-title">Engine Framework</span>
+          <a href="#" class="menu-item"><i class="fa-solid fa-microchip"></i> Pipelines</a>
+          <a href="#" class="menu-item"><i class="fa-solid fa-chart-line"></i> Evaluation Metrics</a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar">TW</div>
+          <div class="user-info">
+            <p class="username">trisha@workspace.ai</p>
+            <span class="status-online">Active Session</span>
+          </div>
+          <i class="fa-solid : sign-out-alt logout-icon"></i>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <div class="banner-promo">
+        <span class="banner-text">🚀 <strong>Compiler Environment Active:</strong> Multi-Stage Schema Verification & Self-Repair Engine Engine</span>
+        <span class="status-badge"><i class="fa-solid fa-circle-check"></i> System Operational</span>
+      </div>
+
+      <div class="workspace-container">
+        <h2 class="workspace-title">What will you build next?</h2>
+        
+        <div class="prompt-box-container">
+          <textarea id="promptInput" placeholder="Describe the application architecture you want to compile into structured specifications..."></textarea>
+          
+          <div class="prompt-toolbar">
+            <div class="toolbar-actions">
+              <button class="tool-btn" title="Add Attachments"><i class="fa-solid : plus"></i></button>
+              <button class="tool-btn" title="Database Flow Tuning"><i class="fa-solid : route"></i></button>
+              <button class="tool-btn" title="Toggle Execution Mode"><i class="fa-solid : sliders"></i></button>
+            </div>
+            
+            <div class="compiler-trigger-row">
+              <div class="plan-toggle">
+                <span class="toggle-label">Strict Validation</span>
+                <label class="switch">
+                  <input type="checkbox" checked id="strictMode">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <button id="compileBtn" class="primary-compile-btn" onclick="triggerCompilation()">
+                <span>Compile App Spec</span>
+                <i class="fa-solid : arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="suggestion-pills">
+          <button class="pill" onclick="setPresetPrompt('crm')">Tasks & Workflows</button>
+          <button class="pill" onclick="setPresetPrompt('crm')">CRM & Sales</button>
+          <button class="pill" onclick="setPresetPrompt('ecommerce')">Content & Sites</button>
+          <button class="pill" onclick="setPresetPrompt('finance')">Finance</button>
+          <button class="pill" onclick="setPresetPrompt('booking')">Booking System</button>
+        </div>
+
+        <div class="compiler-monitor-grid">
+          
+          <div class="monitor-card">
+            <div class="card-header">
+              <span class="indicator-dot blinking"></span>
+              <h5>Pipeline Stage Telemetry Execution Trace Logs</h5>
+            </div>
+            <div class="card-body">
+              <div id="logOutput" class="telemetry-stream">Engine idling. Waiting for pipeline generation prompt...</div>
+            </div>
+          </div>
+
+          <div class="monitor-card">
+            <div class="card-header">
+              <i class="fa-solid : code json-icon"></i>
+              <h5>Compiled Output Spec Contract (Validated Configuration Map)</h5>
+            </div>
+            <div class="card-body">
+              <pre><code id="jsonOutput">{}</code></pre>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

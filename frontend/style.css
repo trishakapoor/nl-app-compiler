@@ -1,0 +1,408 @@
+:root {
+  --bg-main: #f9fafb;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --border-color: #e5e7eb;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --accent-orange: #ff6b4a;
+  --accent-orange-hover: #e55a3c;
+  --accent-blue: #3b82f6;
+  --telemetry-bg: #0f172a;
+  --telemetry-text: #38bdf8;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Master Grid Window Application Frame Setup Layout Structure */
+.app-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Sidebar Dashboard Navigation Section Menu Panel Components */
+.sidebar {
+  width: 260px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-header {
+  padding: 24px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  font-size: 24px;
+  background: linear-gradient(135deg, #ff9e7d, #ff6b4a);
+  padding: 6px;
+  border-radius: 8px;
+  color: white;
+}
+
+.logo-text h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 11px;
+  background-color: #f3f4f6;
+  color: var(--text-muted);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.sidebar-menu {
+  flex-grow: 1;
+  padding: 20px 12px;
+}
+
+.menu-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  transition: all 0.2s;
+}
+
+.menu-item:hover, .menu-item.active {
+  background-color: #f3f4f6;
+  color: var(--text-main);
+}
+
+.menu-item.active {
+  font-weight: 600;
+  background-color: #fede balance #f9fafb;
+  border-left: 3px solid var(--accent-orange);
+  border-radius: 0 6px 6px 0;
+}
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.user-info {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.username {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-online {
+  font-size: 11px;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Right Content Grid Engine Display Panel Window Blocks */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.banner-promo {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.banner-text {
+  color: #374151;
+  font-weight: 500;
+}
+
+.status-badge {
+  background-color: #ecfdf5;
+  color: #059669;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #a7f3d0;
+}
+.countdown-timer {
+  background-color: var(--accent-orange);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.workspace-container {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 24px;
+  box-sizing: border-box;
+}
+
+.workspace-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  letter-spacing: -0.02em;
+}
+
+/* Prompt Box Area Upgrades */
+.prompt-box-container {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  border: none;
+  padding: 20px;
+  box-sizing: border-box;
+  font-size: 16px;
+  color: var(--text-main);
+  resize: none;
+  outline: none;
+}
+
+.prompt-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #fafafa;
+  border-top: 1px solid var(--border-color);
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.tool-btn {
+  background: white;
+  border: 1px solid var(--border-color);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.compiler-trigger-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.plan-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Switch styling controls */
+.switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
+.slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; }
+input:checked + .slider { background-color: var(--accent-orange); }
+input:checked + .slider:before { transform: translateX(16px); }
+.slider.round { border-radius: 20px; }
+.slider.round:before { border-radius: 50%; }
+
+.primary-compile-btn {
+  background-color: var(--accent-orange);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primary-compile-btn:hover { background-color: var(--accent-orange-hover); }
+.primary-compile-btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+
+.suggestion-pills {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.pill:hover { background-color: #f3f4f6; border-color: #cbd5e1; }
+
+/* Real-Time Dual Monitoring Dashboard Cards Grid Setup */
+.compiler-monitor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.monitor-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-header h5 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.indicator-dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; }
+.blinking { animation: blinker 1.5s linear infinite; }
+@keyframes blinker { 50% { opacity: 0; } }
+
+.telemetry-stream {
+  background-color: var(--telemetry-bg);
+  color: var(--telemetry-text);
+  font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+  font-size: 13px;
+  padding: 16px;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+pre {
+  margin: 0;
+  height: 100%;
+  background-color: #1e1e1e;
+  overflow: auto;
+}
+
+code {
+  font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+  font-size: 13px;
+  color: #ce9178;
+  display: block;
+  padding: 16px;
+}
