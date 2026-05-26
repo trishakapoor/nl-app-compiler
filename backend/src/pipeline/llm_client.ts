@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
  
 // Single shared client — instantiated once, reused across all pipeline stages
 let _client: Anthropic | null = null;
