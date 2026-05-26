@@ -1,49 +1,46 @@
 import express from 'express';
-import { GoogleGenerativeAI } from '@google/generative-ai'; // Enforce correct class import name
-import * as dotenv from 'dotenv';
-import path from 'path';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import { executeCompilerPipeline } from './pipeline/orchestrator';
-
+ 
 dotenv.config();
+ 
 const app = express();
-const port = process.env.PORT || 3000;
-
-// Force validation of the live Render environment Gemini Token
-const apiKey = process.env.GEMINI_API_KEY;
-if (!apiKey) {
-  console.error("❌ CRITICAL ERR: GEMINI_API_KEY is undefined in environment configuration!");
-}
-
-// Corrected SDK client initialization instance block
-const genAI = new GoogleGenerativeAI(apiKey || "");
-
+app.use(cors());
 app.use(express.json());
-
-// 📂 PRODUCTION FALLBACK PATH ENGINE
-app.use(express.static(path.join(__dirname, '../../../frontend'))); 
-app.use(express.static(path.join(__dirname, '../../frontend')));
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../../../frontend/index.html'), (err) => {
-    if (err) {
-      res.sendFile(path.resolve(__dirname, '../../frontend/index.html'));
-    }
-  });
+ 
+// Health check
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', model: 'claude-sonnet-4-20250514' });
 });
-
-app.post('/api/compile', async (req, res) => {
+ 
+// Main compile endpoint
+app.post('/compile', async (req, res) => {
   const { prompt } = req.body;
-  if (!prompt) return res.status(400).json({ error: "Missing prompt string." });
+ 
+  if (!prompt || typeof prompt !== 'string' || prompt.trim().length < 10) {
+    return res.status(400).json({
+      success: false,
+      error: 'prompt is required and must be at least 10 characters',
+    });
+  }
+ 
   try {
-    // Pass the Google AI instance down to your orchestrator pipeline handler
-    const runResult = await executeCompilerPipeline(genAI, prompt);
-    return res.json(runResult);
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message });
+    // NOTE: No AI client is instantiated here anymore.
+    // The pipeline creates its own Anthropic client via getLLMClient().
+    const result = await executeCompilerPipeline(prompt.trim());
+    return res.json(result);
+  } catch (err: any) {
+    return res.status(500).json({
+      success: false,
+      error: err?.message ?? 'Unknown server error',
+    });
   }
 });
-
-app.listen(port, () => {
-  console.log(`🚀 System running live with Gemini Engine at port ${port}`);
+ 
+const PORT = process.env.PORT ?? 3001;
+app.listen(PORT, () => {
+  console.log(`[Server] Running on port ${PORT}`);
+  console.log(`[Server] API key configured: ${!!process.env.ANTHROPIC_API_KEY}`);
 });
+ 

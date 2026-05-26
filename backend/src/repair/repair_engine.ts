@@ -1,15 +1,31 @@
-import OpenAI from 'openai';
-import { zodResponseFormat } from 'openai/helpers/zod';
-import { AppConfigSchema, AppConfigOutput } from '../schemas/contracts';
+import { callLLM } from '../pipeline/llm_client';
+import { AppConfigOutput } from '../schemas/contracts';
 
-export async function triggerRepairEngine(openai: OpenAI, failedConfig: AppConfigOutput, errors: string[]): Promise<AppConfigOutput> {
-  const completion = await openai.beta.chat.completions.parse({
-    model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: 'You are an error-repair agent. Correct broken UI/API bindings to align schemas perfectly.' },
-      { role: 'user', content: `Config:\n${JSON.stringify(failedConfig)}\n\nFaults:\n${errors.join('\n')}` }
-    ],
-    response_format: zodResponseFormat(AppConfigSchema, 'fixed_config')
-  });
-  return completion.choices[0].message.parsed || failedConfig;
+const SYSTEM = `You are a precision schema repair engine.
+You will receive an application config JSON and a list of specific validation errors.
+Fix ONLY the reported errors. Do not change anything else.
+Return ONLY the repaired raw JSON object — no markdown, no explanation.`;
+
+export async function repairConfig(
+  config: AppConfigOutput,
+  errors: string[]
+): Promise<AppConfigOutput> {
+  const repaired = await callLLM<AppConfigOutput>(
+    SYSTEM,
+    `Repair this config to fix these specific errors:
+
+ERRORS TO FIX:
+${errors.map((e, i) => `${i + 1}. ${e}`).join('\n')}
+
+CONFIG:
+${JSON.stringify(config, null, 2)}`,
+    'RepairEngine'
+  );
+
+  if (!repaired.ui || !repaired.api || !repaired.database || !repaired.auth) {
+    console.warn('[RepairEngine] Repaired output lost top-level sections — reverting to original');
+    return config;
+  }
+
+  return repaired;
 }
