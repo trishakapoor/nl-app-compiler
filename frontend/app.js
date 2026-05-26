@@ -5,14 +5,22 @@ let currentUser = localStorage.getItem('workspace_user') || null;
 let appHistory = JSON.parse(localStorage.getItem('compiled_apps_history')) || [];
 
 /**
- * Onboarding Session Manager
- * Runs immediately upon window load to update UI states or prompt for user identity.
+ * App Onboarding Router Initialization
+ * Checks if the user has logged in before, and dynamically displays the right UI screen.
  */
 document.addEventListener("DOMContentLoaded", () => {
-  if (!currentUser) {
-    promptUserLogin();
-  } else {
+  const authScreen = document.getElementById('authGateScreen');
+  const mainDashboard = document.getElementById('mainDashboardWrapper');
+
+  if (currentUser) {
+    // Session exists! Fast-track user straight into their workspace
+    if (authScreen) authScreen.style.setProperty('display', 'none', 'important');
+    if (mainDashboard) mainDashboard.style.display = 'block';
     updateWorkspaceUI(currentUser);
+  } else {
+    // No session found. Show the clean authentication page layout
+    if (authScreen) authScreen.style.setProperty('display', 'flex', 'important');
+    if (mainDashboard) mainDashboard.style.display = 'none';
   }
   
   // Render past build logs into historical caches if element layout exists
@@ -20,47 +28,68 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * Prompts user for their name via a browser input sheet to customize dashboard headers
+ * Form Submission Auth Handler
+ * Triggered when clicking the "Create Workspace Account" button on the gate screen
  */
-function promptUserLogin() {
-  const userName = prompt("Welcome to the AI Compiler Hub! Please enter your name to personalize your custom workspace dashboard layout:");
-  if (userName && userName.trim() !== "") {
-    currentUser = userName.trim();
-    localStorage.setItem('workspace_user', currentUser);
-    updateWorkspaceUI(currentUser);
-  } else {
-    currentUser = "Guest Developer";
-    updateWorkspaceUI(currentUser);
-  }
+function handleAuthSubmit(event) {
+  event.preventDefault(); // Stop page from hard refreshing
+  
+  const nameInput = document.getElementById('authName').value.trim();
+  const emailInput = document.getElementById('authEmail').value.trim();
+  
+  if (nameInput === "") return;
+  
+  // Extract user identity properties and cache securely locally
+  currentUser = nameInput;
+  localStorage.setItem('workspace_user', currentUser);
+  localStorage.setItem('workspace_email', emailInput);
+  
+  // Update Header Text nodes and profile nodes dynamically
+  updateWorkspaceUI(currentUser);
+  
+  // Transition Screens: Hide Login Layer, Show the main Workspace App
+  const authScreen = document.getElementById('authGateScreen');
+  const mainDashboard = document.getElementById('mainDashboardWrapper');
+  
+  if (authScreen) authScreen.style.setProperty('display', 'none', 'important');
+  if (mainDashboard) mainDashboard.style.display = 'block';
 }
 
 /**
- * Dynamically targets workspace header elements to replace generic titles with custom states
+ * Dynamically targets workspace header and element fields to replace placeholders with custom states
  */
 function updateWorkspaceUI(name) {
-  // Targets the top-left logo text brand or workspace workspace header text node dynamically
-  const titleSelectors = [
-    ".sidebar-workspace-title-target", 
-    "h1", 
-    ".sidebar div", 
-    "header h2",
-    ".workspace-title"
-  ];
-  
+  // 1. Update the sidebar user branding titles
+  const displayNames = document.querySelectorAll(".user-display-name, .sidebar-workspace-title-target");
+  displayNames.forEach(element => {
+    element.textContent = `${name}'s Workspace`;
+  });
+
+  // 2. Extract and update the custom user email if stored in system cache
+  const savedEmail = localStorage.getItem('workspace_email');
+  const displayEmails = document.querySelectorAll(".user-display-email, .username");
+  if (savedEmail) {
+    displayEmails.forEach(element => {
+      element.textContent = savedEmail;
+    });
+  }
+
+  // 3. Dynamically slice initials to update the profile footer avatar icon
+  const avatarElement = document.getElementById("userAvatar") || document.querySelector(".avatar");
+  if (avatarElement && name) {
+    const initials = name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+    avatarElement.textContent = initials;
+  }
+
+  // 4. Update core content workspace titles if applicable
+  const titleSelectors = ["h1", "header h2", ".workspace-title", "#workspaceHeaderTitle"];
   for (const selector of titleSelectors) {
     const element = document.querySelector(selector);
-    if (element && (element.textContent.includes("Workspace") || element.textContent.includes("build next"))) {
-      // Replaces or overrides the hardcoded profile state layout values cleanly
+    if (element && (element.textContent.includes("Workspace") || element.textContent.includes("Trisha"))) {
       if (element.tagName === "H1" && element.textContent.includes("What will you build next?")) continue; 
       element.textContent = `${name}'s Workspace`;
       break;
     }
-  }
-  
-  // Fallback explicit selector for the prominent top banner text if layout contains it
-  const brandingHeader = document.querySelector(".brand-name, [id='workspace-header-title']");
-  if (brandingHeader) {
-    brandingHeader.textContent = `${name}'s Workspace`;
   }
 }
 
@@ -94,7 +123,7 @@ function renderApplicationHistory(historyArray) {
   }
   
   historyContainer.innerHTML = historyArray.map(app => `
-    <div class="history-item-card p-3 border-b border-gray-800 text-xs text-gray-300 hover:bg-gray-900/50 transition-all style="cursor: pointer;" onclick="document.getElementById('promptInput').value = '${app.prompt.replace(/'/g, "\\'")}';">
+    <div class="history-item-card p-3 border-b border-gray-800 text-xs text-gray-300 hover:bg-gray-900/50 transition-all" style="cursor: pointer;" onclick="document.getElementById('promptInput').value = '${app.prompt.replace(/'/g, "\\'")}';">
       <div class="flex justify-between items-center mb-1">
         <strong class="text-gray-200 truncate max-w-[180px]">🚀 ${app.prompt}</strong>
         <span class="px-1.5 py-0.5 rounded text-[10px] ${app.status === 'Success' ? 'bg-green-950 text-green-400' : 'bg-red-950 text-red-400'}">${app.status}</span>
