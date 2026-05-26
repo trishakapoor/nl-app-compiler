@@ -1,4 +1,110 @@
 /**
+ * Global Session and Cache Storage States
+ */
+let currentUser = localStorage.getItem('workspace_user') || null;
+let appHistory = JSON.parse(localStorage.getItem('compiled_apps_history')) || [];
+
+/**
+ * Onboarding Session Manager
+ * Runs immediately upon window load to update UI states or prompt for user identity.
+ */
+document.addEventListener("DOMContentLoaded", () => {
+  if (!currentUser) {
+    promptUserLogin();
+  } else {
+    updateWorkspaceUI(currentUser);
+  }
+  
+  // Render past build logs into historical caches if element layout exists
+  renderApplicationHistory(appHistory);
+});
+
+/**
+ * Prompts user for their name via a browser input sheet to customize dashboard headers
+ */
+function promptUserLogin() {
+  const userName = prompt("Welcome to the AI Compiler Hub! Please enter your name to personalize your custom workspace dashboard layout:");
+  if (userName && userName.trim() !== "") {
+    currentUser = userName.trim();
+    localStorage.setItem('workspace_user', currentUser);
+    updateWorkspaceUI(currentUser);
+  } else {
+    currentUser = "Guest Developer";
+    updateWorkspaceUI(currentUser);
+  }
+}
+
+/**
+ * Dynamically targets workspace header elements to replace generic titles with custom states
+ */
+function updateWorkspaceUI(name) {
+  // Targets the top-left logo text brand or workspace workspace header text node dynamically
+  const titleSelectors = [
+    ".sidebar-workspace-title-target", 
+    "h1", 
+    ".sidebar div", 
+    "header h2",
+    ".workspace-title"
+  ];
+  
+  for (const selector of titleSelectors) {
+    const element = document.querySelector(selector);
+    if (element && (element.textContent.includes("Workspace") || element.textContent.includes("build next"))) {
+      // Replaces or overrides the hardcoded profile state layout values cleanly
+      if (element.tagName === "H1" && element.textContent.includes("What will you build next?")) continue; 
+      element.textContent = `${name}'s Workspace`;
+      break;
+    }
+  }
+  
+  // Fallback explicit selector for the prominent top banner text if layout contains it
+  const brandingHeader = document.querySelector(".brand-name, [id='workspace-header-title']");
+  if (brandingHeader) {
+    brandingHeader.textContent = `${name}'s Workspace`;
+  }
+}
+
+/**
+ * Local Client State Persistence Layer
+ * Saves successful compile parameters safely to localStorage cache layers.
+ */
+function saveAppToHistory(promptText, status) {
+  const newAppEntry = {
+    id: Date.now(),
+    prompt: promptText,
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    status: status
+  };
+  
+  appHistory.unshift(newAppEntry); // Adds latest run configuration straight to the top of the list
+  localStorage.setItem('compiled_apps_history', JSON.stringify(appHistory));
+  renderApplicationHistory(appHistory);
+}
+
+/**
+ * Loops and generates dynamic workspace markup for application generation logging references
+ */
+function renderApplicationHistory(historyArray) {
+  const historyContainer = document.getElementById('historyList') || document.querySelector(".history-list-container") || document.getElementById('history');
+  if (!historyContainer) return; // Bypasses execution if layout panel container isn't present
+  
+  if (historyArray.length === 0) {
+    historyContainer.innerHTML = `<p class="text-xs text-gray-500 p-3">No previous builds found in this session cache.</p>`;
+    return;
+  }
+  
+  historyContainer.innerHTML = historyArray.map(app => `
+    <div class="history-item-card p-3 border-b border-gray-800 text-xs text-gray-300 hover:bg-gray-900/50 transition-all style="cursor: pointer;" onclick="document.getElementById('promptInput').value = '${app.prompt.replace(/'/g, "\\'")}';">
+      <div class="flex justify-between items-center mb-1">
+        <strong class="text-gray-200 truncate max-w-[180px]">🚀 ${app.prompt}</strong>
+        <span class="px-1.5 py-0.5 rounded text-[10px] ${app.status === 'Success' ? 'bg-green-950 text-green-400' : 'bg-red-950 text-red-400'}">${app.status}</span>
+      </div>
+      <span class="text-[10px] text-gray-500">${app.timestamp}</span>
+    </div>
+  `).join('');
+}
+
+/**
  * Quick Prompt Presets Trigger Helper
  * Allows users to instantly select specific evaluation test scenarios.
  */
@@ -72,11 +178,17 @@ async function triggerCompilation() {
       jsonOutput.innerText = JSON.stringify(data, null, 2);
     }
 
+    // 💾 Persist Success State into browser local state engines 
+    saveAppToHistory(promptInput, "Success");
+
   } catch (error) {
     // Stream fatal exceptions cleanly directly inside the logging view console
     logOutput.innerHTML += `\n\n❌ FATAL PIPELINE EXCEPTION UNCAUGHT:\n${error.message}`;
-    logOutput.innerHTML += `\n\n[RECOMMENDATION] Check that your backend .env file contains a valid, active OPENAI_API_KEY value.`;
+    logOutput.innerHTML += `\n\n[RECOMMENDATION] Check that your live Render Service Dashboard under 'Environment' contains a valid, active OPENAI_API_KEY value variable injection block.`;
     jsonOutput.innerText = "{\n  \"status\": \"Engine Aborted\",\n  \"error\": true\n}";
+    
+    // 💾 Persist Failure State into tracking list
+    saveAppToHistory(promptInput, "Failed");
   } finally {
     // Re-enable trigger interfaces
     compileBtn.disabled = false;

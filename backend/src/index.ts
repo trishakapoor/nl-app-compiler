@@ -7,7 +7,14 @@ import { executeCompilerPipeline } from './pipeline/orchestrator';
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Force verification of the live Render environment token variable
+const apiKey = process.env.OPENAI_API_KEY;
+if (!apiKey) {
+  console.error("❌ CRITICAL ERR: OPENAI_API_KEY is undefined in environment configuration!");
+}
+
+const openai = new OpenAI({ apiKey: apiKey });
 
 // 🛡️ CRITICAL FIX: Re-add JSON parsing middleware so API requests don't hang
 app.use(express.json());
