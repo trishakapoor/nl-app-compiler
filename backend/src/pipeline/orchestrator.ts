@@ -20,21 +20,23 @@ export interface PipelineExecutionResult {
  */
 export async function executeCompilerPipeline(genAIInstance: any, prompt: string) {
   
-  // Initialize Gemini 1.5 Flash securely
+  // 🌟 FIX: Change model string to target the active production tag 'gemini-1.5-flash-latest'
   const model = genAIInstance.getGenerativeModel({ 
-    model: "gemini-1.5-flash",
+    model: "gemini-1.5-flash-latest",
     generationConfig: {
-      responseMimeType: "application/json" // Locks response into pure parseable JSON structures
+      responseMimeType: "application/json" 
     }
   });
 
   const systemInstruction = `You are a high-performance App Compiler. 
-  Analyze the natural language prompt and output a valid, structured application specification configuration JSON map contract.
-  Return ONLY raw JSON text data.`;
+  Your job is to analyze natural language prompt requirements and output a valid, well-structured application specification configuration JSON map contract.
+  Do not include markdown code block characters (\`\`\`) or conversational text in your answer. Return ONLY the raw JSON string.`;
 
+  // Fire content compilation call down to Google's clusters
   const result = await model.generateContent(`${systemInstruction}\n\nUser Prompt: ${prompt}`);
   const responseText = result.response.text();
 
+  // Safely parse the compiled text straight into an execution object map
   const blueprint = JSON.parse(responseText);
 
   return {
