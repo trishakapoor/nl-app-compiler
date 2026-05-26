@@ -13,16 +13,15 @@ export interface PipelineExecutionResult {
 
 /**
  * Pipeline Execution Orchestrator Loop
- * Leverages the high-speed, lightweight Gemini 1.5 Flash model tier.
+ * Targets the official free-tier stable Gemini Flash engine endpoint
  */
 export async function executeCompilerPipeline(genAIInstance: any, prompt: string): Promise<PipelineExecutionResult> {
   
-  // Clean model assignment tracking
+  // 🌟 ULTIMATE FIX: Pass the configuration parameter strictly to match the SDK endpoint router mappings
   const model = genAIInstance.getGenerativeModel({ 
-    model: "gemini-1.5-flash",
-    generationConfig: {
-      responseMimeType: "application/json" 
-    }
+    model: "gemini-1.5-flash"
+  }, { 
+    apiVersion: 'v1beta' 
   });
 
   const systemInstruction = `You are a high-performance App Compiler. 
