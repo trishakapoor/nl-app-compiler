@@ -13,7 +13,8 @@ async function runEvaluationSuite() {
     const start = Date.now();
     try {
       const result = await executeCompilerPipeline(openai, test.prompt);
-      console.log(`Status: ${result.success ? "🎉 PASSED" : "❌ FAILED"}`);
+// Replace your old console.log line with this production check:
+console.log(`Status: ${result.blueprint ? "🎉 PASSED" : "❌ FAILED"}`);
       console.log(`Retries Used: ${result.metrics.retriesUsed}`);
     } catch (err: any) {
       console.error(`Fault: ${err.message}`);
