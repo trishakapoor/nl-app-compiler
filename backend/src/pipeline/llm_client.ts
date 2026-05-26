@@ -1,46 +1,41 @@
 import Groq from 'groq-sdk';
- 
-// Single shared client — instantiated once, reused across all pipeline stages
-let _client: Anthropic | null = null;
- 
-export function getLLMClient(): Anthropic {
+
+let _client: Groq | null = null;
+
+export function getLLMClient(): Groq {
   if (!_client) {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       throw new Error(
-        '[LLM Client] ANTHROPIC_API_KEY is missing. ' +
-        'Set it in your .env file locally, or in Render → Environment → Add Env Var.'
+        '[LLM Client] GROQ_API_KEY is missing. ' +
+        'Get a free key at console.groq.com → API Keys, then add it to your .env file.'
       );
     }
-    _client = new Anthropic({ apiKey });
+    _client = new Groq({ apiKey });
   }
   return _client;
 }
- 
-/**
- * Core call wrapper used by every pipeline stage.
- * Always requests raw JSON — no markdown, no preamble.
- * Returns the parsed object so stages never have to JSON.parse themselves.
- */
+
 export async function callLLM<T = unknown>(
   systemPrompt: string,
   userPrompt: string,
   label: string = 'LLM'
 ): Promise<T> {
   const client = getLLMClient();
- 
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',  // Sonnet 4 — best balance of speed + quality
+
+  const response = await client.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
+    temperature: 0.3,
     max_tokens: 4096,
-    system: systemPrompt,
-    messages: [{ role: 'user', content: userPrompt }],
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt }
+    ],
   });
- 
-  const raw = (response.content[0] as Anthropic.TextBlock).text;
- 
-  // Strip markdown fences the model might accidentally emit
+
+  const raw = response.choices[0]?.message?.content ?? '';
   const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
- 
+
   try {
     return JSON.parse(cleaned) as T;
   } catch (err) {
@@ -50,4 +45,3 @@ export async function callLLM<T = unknown>(
     );
   }
 }
- 
