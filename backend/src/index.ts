@@ -9,8 +9,23 @@ const app = express();
 const port = process.env.PORT || 3000;
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// 🛡️ CRITICAL FIX: Re-add JSON parsing middleware so API requests don't hang
 app.use(express.json());
+
+// 📂 PRODUCTION FALLBACK PATH ENGINE: Safely routes straight to frontend files
+// When running on Render from backend/dist/index.js, we must look up 3 levels:
+app.use(express.static(path.join(__dirname, '../../../frontend'))); 
 app.use(express.static(path.join(__dirname, '../../frontend')));
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// 🔌 Catch-all Route: Ensures navigating to root "/" always forces index.html delivery
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../../../frontend/index.html'), (err) => {
+    if (err) {
+      res.sendFile(path.resolve(__dirname, '../../frontend/index.html'));
+    }
+  });
+});
 
 app.post('/api/compile', async (req, res) => {
   const { prompt } = req.body;
@@ -24,5 +39,5 @@ app.post('/api/compile', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`🚀 System running live at http://localhost:${port}`);
+  console.log(`🚀 System running live at port ${port}`);
 });
