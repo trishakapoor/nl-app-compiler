@@ -41,6 +41,6 @@ app.post('/compile', async (req, res) => {
 const PORT = process.env.PORT ?? 3001;
 app.listen(PORT, () => {
   console.log(`[Server] Running on port ${PORT}`);
-  console.log(`[Server] API key configured: ${!!process.env.ANTHROPIC_API_KEY}`);
+console.log(`[Server] API key configured: ${!!process.env.GROQ_API_KEY}`);
 });
  
