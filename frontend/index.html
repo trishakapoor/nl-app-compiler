@@ -3,124 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trisha's Workspace — AI App Compiler</title>
+  <title>Developer Workspace — AI App Compiler</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-  <div class="app-layout">
-    
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="logo-container">
-          <span class="logo-icon">⚡</span>
-          <div class="logo-text">
-            <h4>Trisha's Workspace</h4>
-            <span class="badge">Free Plan</span>
-          </div>
-        </div>
-      </div>
-
-      <nav class="sidebar-menu">
-        <div class="menu-section">
-          <span class="section-title">Navigation</span>
-          <a href="#" class="menu-item active"><i class="fa-solid fa-house"></i> Home</a>
-          <a href="#" class="menu-item"><i class="fa-solid fa-border-all"></i> All Apps</a>
-          <a href="#" class="menu-item"><i class="fa-solid fa-layer-group"></i> Templates</a>
-          <a href="#" class="menu-item"><i class="fa-solid fa-plug"></i> Integrations</a>
-        </div>
-
-        <div class="menu-section">
-          <span class="section-title">Engine Framework</span>
-          <a href="#" class="menu-item"><i class="fa-solid fa-microchip"></i> Pipelines</a>
-          <a href="#" class="menu-item"><i class="fa-solid fa-chart-line"></i> Evaluation Metrics</a>
-        </div>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="user-profile">
-          <div class="avatar">TW</div>
-          <div class="user-info">
-            <p class="username">trisha@workspace.ai</p>
-            <span class="status-online">Active Session</span>
-          </div>
-          <i class="fa-solid : sign-out-alt logout-icon"></i>
-        </div>
-      </div>
-    </aside>
-
-    <main class="main-content">
+  <div id="authGateScreen" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #0b0f19; font-family: system-ui, -apple-system, sans-serif; color: #fff; position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;">
+    <div style="background: #111827; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); width: 100%; max-width: 400px; border: 1px solid #1f2937; box-sizing: border-box; margin: 1rem;">
       
-      <div class="banner-promo">
-        <span class="banner-text">🚀 <strong>Compiler Environment Active:</strong> Multi-Stage Schema Verification & Self-Repair Engine Engine</span>
-        <span class="status-badge"><i class="fa-solid fa-circle-check"></i> System Operational</span>
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⚡</div>
+        <h2 style="font-size: 1.75rem; font-weight: 700; color: #3b82f6; margin: 0 0 0.5rem 0; letter-spacing: -0.025em;">AI Compiler Hub</h2>
+        <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">Sign up to initialize your custom pipeline engine</p>
       </div>
-
-      <div class="workspace-container">
-        <h2 class="workspace-title">What will you build next?</h2>
+      
+      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+        <div style="margin-bottom: 1.25rem;">
+          <label style="display: block; font-size: 0.75rem; color: #9ca3af; margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Developer Name</label>
+          <input type="text" id="authName" required placeholder="e.g. Trisha Kapoor" style="width: 100%; padding: 0.75rem; background: #1f2937; border: 1px solid #374151; border-radius: 6px; color: #fff; font-size: 0.9rem; outline: none; box-sizing: border-box; transition: border-color 0.2s;">
+        </div>
         
-        <div class="prompt-box-container">
-          <textarea id="promptInput" placeholder="Describe the application architecture you want to compile into structured specifications..."></textarea>
-          
-          <div class="prompt-toolbar">
-            <div class="toolbar-actions">
-              <button class="tool-btn" title="Add Attachments"><i class="fa-solid : plus"></i></button>
-              <button class="tool-btn" title="Database Flow Tuning"><i class="fa-solid : route"></i></button>
-              <button class="tool-btn" title="Toggle Execution Mode"><i class="fa-solid : sliders"></i></button>
+        <div style="margin-bottom: 2rem;">
+          <label style="display: block; font-size: 0.75rem; color: #9ca3af; margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Email Address</label>
+          <input type="email" id="authEmail" required placeholder="name@domain.com" style="width: 100%; padding: 0.75rem; background: #1f2937; border: 1px solid #374151; border-radius: 6px; color: #fff; font-size: 0.9rem; outline: none; box-sizing: border-box; transition: border-color 0.2s;">
+        </div>
+        
+        <button type="submit" style="width: 100%; padding: 0.85rem; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background-color 0.2s; display: flex; justify-content: center; align-items: center; gap: 0.5rem;">
+          <span>Launch Workspace Container</span>
+          <i class="fa-solid fa-arrow-right" style="font-size: 0.85rem;"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="mainDashboardWrapper" style="display: none;">
+    <div class="app-layout">
+      
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo-container">
+            <span class="logo-icon">⚡</span>
+            <div class="logo-text">
+              <h4 class="user-display-name">Developer Workspace</h4>
+              <span class="badge">Free Plan</span>
             </div>
+          </div>
+        </div>
+
+        <nav class="sidebar-menu">
+          <div class="menu-section">
+            <span class="section-title">Navigation</span>
+            <a href="#" class="menu-item active"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="#" class="menu-item"><i class="fa-solid fa-border-all"></i> All Apps</a>
+            <a href="#" class="menu-item"><i class="fa-solid fa-layer-group"></i> Templates</a>
+            <a href="#" class="menu-item"><i class="fa-solid fa-plug"></i> Integrations</a>
+          </div>
+
+          <div class="menu-section">
+            <span class="section-title">Engine Framework</span>
+            <a href="#" class="menu-item"><i class="fa-solid fa-microchip"></i> Pipelines</a>
+            <a href="#" class="menu-item"><i class="fa-solid fa-chart-line"></i> Evaluation Metrics</a>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-profile">
+            <div class="avatar" id="userAvatar">DV</div>
+            <div class="user-info">
+              <p class="username user-display-email">dev@workspace.ai</p>
+              <span class="status-online">Active Session</span>
+            </div>
+            <i class="fa-solid fa-sign-out-alt logout-icon" title="Clear Session Log" style="cursor: pointer;" onclick="localStorage.clear(); window.location.reload();"></i>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        
+        <div class="banner-promo">
+          <span class="banner-text">🚀 <strong>Compiler Environment Active:</strong> Multi-Stage Schema Verification & Self-Repair Engine</span>
+          <span class="status-badge"><i class="fa-solid fa-circle-check"></i> System Operational</span>
+        </div>
+
+        <div class="workspace-container">
+          <h2 class="workspace-title" id="workspaceHeaderTitle">What will you build next?</h2>
+          
+          <div class="prompt-box-container">
+            <textarea id="promptInput" placeholder="Describe the application architecture you want to compile into structured specifications..."></textarea>
             
-            <div class="compiler-trigger-row">
-              <div class="plan-toggle">
-                <span class="toggle-label">Strict Validation</span>
-                <label class="switch">
-                  <input type="checkbox" checked id="strictMode">
-                  <span class="slider round"></span>
-                </label>
+            <div class="prompt-toolbar">
+              <div class="toolbar-actions">
+                <button class="tool-btn" title="Add Attachments"><i class="fa-solid fa-plus"></i></button>
+                <button class="tool-btn" title="Database Flow Tuning"><i class="fa-solid fa-route"></i></button>
+                <button class="tool-btn" title="Toggle Execution Mode"><i class="fa-solid fa-sliders"></i></button>
               </div>
-              <button id="compileBtn" class="primary-compile-btn" onclick="triggerCompilation()">
-                <span>Compile App Spec</span>
-                <i class="fa-solid : arrow-right"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="suggestion-pills">
-          <button class="pill" onclick="setPresetPrompt('crm')">Tasks & Workflows</button>
-          <button class="pill" onclick="setPresetPrompt('crm')">CRM & Sales</button>
-          <button class="pill" onclick="setPresetPrompt('ecommerce')">Content & Sites</button>
-          <button class="pill" onclick="setPresetPrompt('finance')">Finance</button>
-          <button class="pill" onclick="setPresetPrompt('booking')">Booking System</button>
-        </div>
-
-        <div class="compiler-monitor-grid">
-          
-          <div class="monitor-card">
-            <div class="card-header">
-              <span class="indicator-dot blinking"></span>
-              <h5>Pipeline Stage Telemetry Execution Trace Logs</h5>
-            </div>
-            <div class="card-body">
-              <div id="logOutput" class="telemetry-stream">Engine idling. Waiting for pipeline generation prompt...</div>
+              
+              <div class="compiler-trigger-row">
+                <div class="plan-toggle">
+                  <span class="toggle-label">Strict Validation</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="strictMode">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <button id="compileBtn" class="primary-compile-btn" onclick="triggerCompilation()">
+                  <span>Compile App Spec</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="monitor-card">
-            <div class="card-header">
-              <i class="fa-solid : code json-icon"></i>
-              <h5>Compiled Output Spec Contract (Validated Configuration Map)</h5>
+          <div class="suggestion-pills">
+            <button class="pill" onclick="setPresetPrompt('crm')">Tasks & Workflows</button>
+            <button class="pill" onclick="setPresetPrompt('crm')">CRM & Sales</button>
+            <button class="pill" onclick="setPresetPrompt('ecommerce')">Content & Sites</button>
+            <button class="pill" onclick="setPresetPrompt('finance')">Finance</button>
+            <button class="pill" onclick="setPresetPrompt('booking')">Booking System</button>
+          </div>
+
+          <div class="compiler-monitor-grid">
+            
+            <div class="monitor-card">
+              <div class="card-header">
+                <span class="indicator-dot blinking"></span>
+                <h5>Pipeline Stage Telemetry Execution Trace Logs</h5>
+              </div>
+              <div class="card-body">
+                <div id="logOutput" class="telemetry-stream">Engine idling. Waiting for pipeline generation prompt...</div>
+              </div>
             </div>
-            <div class="card-body">
-              <pre><code id="jsonOutput">{}</code></pre>
+
+            <div class="monitor-card">
+              <div class="card-header">
+                <i class="fa-solid fa-code json-icon"></i>
+                <h5>Compiled Output Spec Contract (Validated Configuration Map)</h5>
+              </div>
+              <div class="card-body">
+                <pre><code id="jsonOutput">{}</code></pre>
+              </div>
             </div>
+
           </div>
 
         </div>
+      </main>
 
-      </div>
-    </main>
-
+    </div>
   </div>
 
   <script src="app.js"></script>
