@@ -20,9 +20,9 @@ export interface PipelineExecutionResult {
  */
 export async function executeCompilerPipeline(genAIInstance: any, prompt: string) {
   
-  // 🌟 FIX: Change model string to target the active production tag 'gemini-1.5-flash-latest'
+  // 🌟 CRITICAL MOVEMENT: Provide the exact model string name the official SDK maps internally
   const model = genAIInstance.getGenerativeModel({ 
-    model: "gemini-1.5-flash-latest",
+    model: "gemini-1.5-flash",
     generationConfig: {
       responseMimeType: "application/json" 
     }
